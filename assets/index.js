@@ -35,13 +35,13 @@ function computePI(digit, _PI = PI) {
         if (x === undefined) {
             pi = x = 3n * (10n ** BigInt(digit + 20))
         } else {
-            if (digit < maxDigit) {
-                pi = x = x / (10n ** BigInt(maxDigit - digit))
+            if (digit === maxDigit) {
+                pi = PI
                 break compute
             } else if (digit > maxDigit) {
                 pi = x = x * (10n ** BigInt(digit - maxDigit))
-            } else {
-                pi = PI
+            } else if (digit < maxDigit) {
+                pi = x = x / (10n ** BigInt(maxDigit - digit))
                 break compute
             }
         }
