@@ -36,10 +36,10 @@ function computePI(digit, _PI = PI) {
             pi = x = 3n * (10n ** BigInt(digit + 20))
         } else {
             if (digit < maxDigit) {
-                pi = x = x * (10n ** BigInt(digit - maxDigit))
-            } else if (digit > maxDigit) {
                 pi = x = x / (10n ** BigInt(maxDigit - digit))
                 break compute
+            } else if (digit > maxDigit) {
+                pi = x = x * (10n ** BigInt(digit - maxDigit))
             } else {
                 pi = PI
                 break compute
