@@ -1,6 +1,6 @@
 let maxDigit = 0
-/** @type {BigInt} */
-let PI
+/** @type {BigInt | null} */
+let PI = null
 
 /**
  * save PI compute state
@@ -17,39 +17,35 @@ function saveState(_maxDigit, _PI) {
  * 计算 PI 的值
  *
  * @param {number} digit
- * @param {BigInt = PI} _PI
+ * @param {typeof PI} [_PI=PI]
  * @return {BigInt}
  */
 function computePI(digit, _PI = PI) {
+    digit += 1
     if (digit < 0) {
         throw new Error('digit must be a positive integer')
     }
     if (digit === 0) {
         return 3n
     }
-    let i = 1n
     let x = _PI
     /** @type {typeof x} */
-    let pi
+    let pi = 0n
     compute: {
-        if (x === undefined) {
-            pi = x = 3n * (10n ** BigInt(digit + 20))
-        } else {
-            if (digit === maxDigit) {
-                pi = PI
-                break compute
-            } else if (digit < maxDigit) {
-                pi = x = x / (10n ** BigInt(maxDigit - digit))
-                break compute
-            } else if (digit > maxDigit) {
-                pi = x = x * (10n ** BigInt(digit - maxDigit))
-            }
+        if (digit === maxDigit) {
+            pi = PI
+            break compute
+        } else if (digit < maxDigit) {
+            pi = x / (10n ** BigInt(maxDigit - digit))
+            break compute
+        } else if (digit > maxDigit) {
+            x = 10n ** BigInt(digit + 20)
         }
 
-        while (x > 0) {
-            x = x * i / ((i + 1n) * 4n)
-            pi += x / (i + 2n)
-            i += 2n
+        let i = 1n
+        for (; x > 0n ; i += 2n) {
+            x = x * (i * i) / (4n * (i + 1n) * (i + 2n))
+            pi += 3n * x
         }
         saveState(digit, pi)
     }
@@ -57,7 +53,7 @@ function computePI(digit, _PI = PI) {
 }
 
 function main() {
-    ;[5, 10, 100, 1000, 10000, 10000].map(digit => {
+    ;[100000, 2, 3, 4].map(digit => {
         console.group(`${digit} digits`)
         console.time(`${digit} digits`)
         let pi = computePI(digit)
